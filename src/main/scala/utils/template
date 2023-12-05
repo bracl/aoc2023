@@ -1,0 +1,23 @@
+package utils
+
+import utils.ReadFiles
+import zio.Scope
+import zio.test.{Assertion, Spec, TestAspect, TestEnvironment, ZIOSpecDefault, assert}
+
+object dayDAY extends ZIOSpecDefault {
+
+  val input = ReadFiles.readFile(DAY)
+  input.foreach(println)
+
+  val p1 = test("p1") {
+    val task = 0
+    assert(task)(Assertion.equalTo(0))
+  }
+
+  val p2 = test("p2") {
+    val task = 0
+    assert(task)(Assertion.equalTo(0))
+  }
+
+  override def spec: Spec[TestEnvironment with Scope, Any] = suite("DAY")(p1, p2) @@ TestAspect.sequential
+}
