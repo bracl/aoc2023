@@ -83,17 +83,26 @@ object day5 extends ZIOSpecDefault {
   val p2 = test("p2") {
     val allSeeds: Vector[(Long, Long)] = seeds.grouped(2).map(t => (t.head, t.head + t.last)).toVector
 
-    @tailrec
-    def findFirstSeed(l: Long): Long = {
-      val seed = surfTheMaps(l, "location", reverseMappingsMap, (m, n) => m.input(n), m => m.source)
-      println(s"$l, $seed")
-      if (allSeeds.exists(r => r._1 <= seed && r._2 >= seed))
-        l
-      else
-        findFirstSeed(l + 1)
+    def findFirstSeed(): Long = {
+
+      val minBucket     = reverseMappingsMap.values.map(_.rules.minBy(r => r._2 - r._1)).minBy(r => r._2 - r._1)
+      val minBucketSize = (minBucket._2 - minBucket._1) / 2
+
+      @tailrec
+      def loop(l: Long, inc: Long = 1): Long = {
+        println(l)
+        val seed = surfTheMaps(l, "location", reverseMappingsMap, (m, n) => m.input(n), m => m.source)
+        if (allSeeds.exists(r => r._1 <= seed && r._2 >= seed))
+          l
+        else
+          loop(l + inc, inc)
+      }
+      val minBucketMarker = loop(0, minBucketSize)
+      val seed            = loop(minBucketMarker - minBucketSize)
+      seed
     }
 
-    val task = findFirstSeed(0)
+    val task = findFirstSeed()
     assert(task)(Assertion.equalTo(28580589))
   }
 
