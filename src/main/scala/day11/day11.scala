@@ -22,6 +22,8 @@ object day11 extends ZIOSpecDefault {
     if in(y)(x) == star
   } yield (x, y)
 
+  val stars = allStars(input)
+
   def dist(star1: (Int, Int), star2: (Int, Int), xs: Set[Int], ys: Set[Int], expansion: Int): Long = {
     val (y0, y1) = if (star1._2 < star2._2) (star1._2, star2._2) else (star2._2, star1._2)
     val (x0, x1) = if (star1._1 < star2._1) (star1._1, star2._1) else (star2._1, star1._1)
@@ -31,20 +33,16 @@ object day11 extends ZIOSpecDefault {
   }
 
   def distances(coords: Seq[(Int, Int)], expansion: Int): Long =
-    coords.zipWithIndex.foldLeft(0L) { case (acc, (c, i)) =>
-      val starsToDistance = coords.drop(i + 1)
-      val distances       = starsToDistance.map(s => dist(c, s, xsToExpand, ysToExpand, expansion))
-      acc + distances.sum
-    }
+    coords.combinations(2).map(stars => dist(stars.head, stars.last, xsToExpand, ysToExpand, expansion)).sum
 
   val p1 = test("p1") {
-    val task = distances(allStars(input), 2)
+    val task = distances(stars, 2)
     assert(task)(Assertion.equalTo(9545480))
   }
 
   val p2 = test("p2") {
-    val task = distances(allStars(input), 1000000)
-    assert(task)(Assertion.equalTo(0))
+    val task = distances(stars, 1000000)
+    assert(task)(Assertion.equalTo(406725732046L))
   }
 
   override def spec: Spec[TestEnvironment with Scope, Any] = suite("11")(p1, p2) @@ TestAspect.sequential
