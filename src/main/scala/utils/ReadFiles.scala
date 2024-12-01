@@ -1,8 +1,8 @@
 package utils
 
 object ReadFiles {
-  def inText(day: Int) = s"/Users/bradley.king/dev/aoc2023/src/main/scala/day$day/in.txt"
-  def exText(day: Int) = s"/Users/bradley.king/dev/aoc2023/src/main/scala/day$day/ex.txt"
+  def inText(day: Int) = s"/Users/bradley.king/dev/bracl/aoc2023/src/main/scala/day$day/in.txt"
+  def exText(day: Int) = s"/Users/bradley.king/dev/bracl/aoc2023/src/main/scala/day$day/ex.txt"
 
   def readFile(day: Int, trim: Boolean = true): Vector[String] =
     readFile(inText(day), trim)
